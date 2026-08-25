@@ -66,23 +66,20 @@ function buildSeries(
   bandPct: number[]
 ): PricePoint[] {
   const pts: PricePoint[] = history.map((p, i) => ({
-    month: MONTHS[i],
+    month: MONTHS[i]!,
     price: p,
     forecast: null,
     upper: null,
     lower: null,
   }));
   // bridge point so the forecast line connects to history
-  pts[pts.length - 1] = {
-    ...pts[pts.length - 1],
-    forecast: history[history.length - 1],
-    upper: history[history.length - 1],
-    lower: history[history.length - 1],
-  };
+  const last = pts[pts.length - 1]!;
+  const lastPrice = history[history.length - 1]!;
+  pts[pts.length - 1] = { ...last, forecast: lastPrice, upper: lastPrice, lower: lastPrice };
   forecast.forEach((f, i) => {
-    const band = bandPct[i];
+    const band = bandPct[i]!;
     pts.push({
-      month: FUTURE[i],
+      month: FUTURE[i]!,
       price: null,
       forecast: f,
       upper: Math.round(f * (1 + band) * 10) / 10,
